@@ -684,3 +684,266 @@ select option {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+/* Import Cinzel font */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap');
+
+/* Reset some defaults */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Fancy title styling */
+.fancy-title {
+  font-family: 'Cinzel', serif !important;
+  text-shadow: 0 0 20px rgba(218, 165, 32, 0.5), 0 0 40px rgba(218, 165, 32, 0.3);
+  letter-spacing: 0.1em;
+}
+
+/* Gold gradient text - static */
+.gradient-gold-text-static {
+  background: linear-gradient(135deg, #FFD700 0%, #FDB931 25%, #FFD700 50%, #FFED4E 75%, #FFD700 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+}
+
+/* Gold gradient text - hover effect */
+.gradient-gold-text-hover {
+  color: #FFD700;
+  transition: all 0.3s ease;
+}
+
+.gradient-gold-text-hover:hover {
+  background: linear-gradient(135deg, #FFD700 0%, #FDB931 25%, #FFD700 50%, #FFED4E 75%, #FFD700 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shine 3s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
+}
+
+/* Gold button gradient */
+.bg-gradient-gold-btn {
+  background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #FFD700 100%);
+  background-size: 200% auto;
+  animation: shine 3s linear infinite;
+}
+
+/* Animated gradient background */
+.animated-gradient {
+  background: linear-gradient(-45deg, #000000, #1a1a1a, #2d2d2d, #404040, #1a1a1a, #000000);
+  background-size: 400% 400%;
+  animation: gradient-shift 25s ease infinite;
+}
+
+/* Spotlight card with permanent golden border glow */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 2px;
+  background: linear-gradient(45deg, #FFD700, #FDB931, #FFED4E, #FFD700);
+  background-size: 200% 200%;
+  animation: glow-rotate 3s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Quote card hover effects */
+.quote-card {
+  position: relative;
+}
+
+.quote-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 2px;
+  background: linear-gradient(45deg, transparent, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+.quote-card:hover::before {
+  background: linear-gradient(45deg, #FFD700, #FDB931, #FFED4E, #FFD700);
+  background-size: 200% 200%;
+  animation: glow-rotate 3s linear infinite;
+  opacity: 1;
+}
+
+.quote-card:hover {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+  transform: translateY(-4px);
+}
+
+/* Quote text pop effect on hover */
+.quote-text {
+  transition: all 0.5s ease;
+}
+
+.quote-card:hover .quote-text {
+  transform: scale(1.02);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Highlight flash animation for random quote */
+.highlight-flash {
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+/* Keyframe animations */
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes glow-rotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes highlight-pulse {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    border-color: #FFD700;
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.8);
+    border-color: #FFED4E;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-fade-in-slow {
+  animation: fade-in-slow 1.2s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.8s ease-out forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.4s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes fade-in-slow {
+  from { 
+    opacity: 0; 
+    transform: translateY(40px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slide-in {
+  from { 
+    opacity: 0; 
+    transform: translateX(-30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes slide-down {
+  from { 
+    opacity: 0; 
+    transform: translateY(-20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slide-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .text-7xl {
+    font-size: 6rem;
+  }
+}
