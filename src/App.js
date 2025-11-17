@@ -771,7 +771,7 @@ export default function MovieQuotesTracker() {
                 <div className="relative z-10 p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold gradient-gold-text-hover mb-2 group-hover:scale-105 transition-transform duration-300">
+                      <h3 className="text-2xl font-bold gradient-gold-text-hover mb-2 group-hover:scale-105 transition-all duration-300">
                         {quote.movieName || quote.title}
                       </h3>
                       {!quote.collapsed && (

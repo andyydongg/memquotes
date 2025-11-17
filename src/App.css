@@ -133,8 +133,18 @@ button {
 }
 
 .quote-card:hover .quote-text {
-  transform: scale(1.02);
+  transform: scale(1.02) translateX(5px);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Remove title scale on hover */
+.group-hover\:scale-105 {
+  transition: filter 0.3s ease;
+}
+
+.quote-card:hover .group-hover\:scale-105 {
+  transform: scale(1) !important;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
 }
 
 /* Highlight flash animation for random quote */
@@ -440,4 +450,9 @@ select option { background-color: black; color: white; }
   .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .md\:w-auto { width: auto; }
+}
+
+/* Yellow border for quotes */
+.border-l-4 {
+  border-left: 4px solid #FFD700 !important;
 }
