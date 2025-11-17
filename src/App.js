@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Clock, Calendar, User, Trash2, Edit2, Upload, X, Filter, Settings, ChevronDown, ChevronUp, Star, Volume2 } from 'lucide-react';
+import './App.css';
 
 export default function MovieQuotesTracker() {
   const [quotes, setQuotes] = useState([
