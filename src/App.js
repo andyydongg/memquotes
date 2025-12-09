@@ -6,17 +6,17 @@ export default function MovieQuotesTracker() {
   const [quotes, setQuotes] = useState([
     {
       id: 1,
-      movieName: "The Shawshank Redemption",
-      title: "The Shawshank Redemption",
+      movieName: "Spider-Man: Homecoming",
+      title: "Spider-Man: Homecoming",
       type: "Movie",
-      series: "",
-      author: "Andy Dufresne",
-      year: "1994",
-      genre: "Drama",
+      series: "Spider-man",
+      author: "Tony Stark",
+      year: "2017",
+      genre: "Science Fiction | Action",
       length: "142 min",
       timestamp: "1:56:20",
       quote: "Hope is a good thing, maybe the best of things, and no good thing ever dies.",
-      backgroundImage: "",
+      backgroundImage: "/images/spiderman_homecoming.jpg",
       audioFile: "",
       collapsed: false
     },
@@ -28,11 +28,11 @@ export default function MovieQuotesTracker() {
       series: "",
       author: "Don Vito Corleone",
       year: "1972",
-      genre: "Crime",
+      genre: "Crime | Drama",
       length: "175 min",
       timestamp: "0:42:15",
       quote: "I'm gonna make him an offer he can't refuse.",
-      backgroundImage: "",
+      backgroundImage: "/images/godfather.jpg",
       audioFile: "",
       collapsed: false
     },
@@ -44,11 +44,11 @@ export default function MovieQuotesTracker() {
       series: "",
       author: "Joker",
       year: "2008",
-      genre: "Action",
+      genre: "Action | Thriller | Crime",
       length: "152 min",
       timestamp: "1:23:45",
       quote: "Why so serious?",
-      backgroundImage: "",
+      backgroundImage: "/images/darkknight.jpg",
       audioFile: "",
       collapsed: false
     },
@@ -60,11 +60,11 @@ export default function MovieQuotesTracker() {
       series: "Harry Potter",
       author: "Albus Dumbledore",
       year: "1997",
-      genre: "Fantasy",
+      genre: "Fantasy | Adventure",
       length: "309 pages",
       timestamp: "Chapter 17",
       quote: "It does not do to dwell on dreams and forget to live.",
-      backgroundImage: "",
+      backgroundImage: "/images/harrypotter.jpg",
       audioFile: "",
       collapsed: false
     },
@@ -76,11 +76,11 @@ export default function MovieQuotesTracker() {
       series: "",
       author: "Walter White",
       year: "2008",
-      genre: "Drama",
+      genre: "Crime | Drama | Thriller",
       length: "Season 5",
       timestamp: "S5E14",
       quote: "I am the one who knocks.",
-      backgroundImage: "",
+      backgroundImage: "/images/breakingbad.jpg",
       audioFile: "",
       collapsed: false
     }
@@ -189,8 +189,14 @@ export default function MovieQuotesTracker() {
 
   const playAudio = (audioFile) => {
     if (audioFile) {
-      const audio = new Audio(audioFile);
-      audio.play();
+      try {
+        const audio = new Audio(audioFile);
+        audio.play().catch(error => {
+          console.error('Error playing audio:', error);
+        });
+      } catch (error) {
+        console.error('Error playing audio:', error);
+      }
     }
   };
 
@@ -319,7 +325,7 @@ export default function MovieQuotesTracker() {
     const matchesSeries = !filters.series || q.series === filters.series;
     const matchesAuthor = !filters.author || q.author === filters.author;
     const matchesYear = !filters.year || q.year === filters.year;
-    const matchesGenre = !filters.genre || q.genre === filters.genre;
+    const matchesGenre = !filters.genre || (q.genre && q.genre.toLowerCase().includes(filters.genre.toLowerCase()));
     
     let matchesLength = true;
     if (filters.lengthRange) {
@@ -424,6 +430,11 @@ export default function MovieQuotesTracker() {
                       {spotlightQuote.series && (
                         <span className="px-2 py-1 bg-gray-800/80 rounded text-xs">Series: {spotlightQuote.series}</span>
                       )}
+                      {spotlightQuote.genre && spotlightQuote.genre.split('|').map((g, i) => (
+                        <span key={i} className="px-2 py-1 bg-gray-800/80 rounded text-xs">
+                          {g.trim()}
+                        </span>
+                      ))}
                       <span className="flex items-center gap-1">
                         <User className="w-4 h-4" />
                         {spotlightQuote.author}
@@ -629,7 +640,7 @@ export default function MovieQuotesTracker() {
                 />
                 <input
                   type="text"
-                  placeholder="Genre (e.g., Drama, Fantasy)"
+                  placeholder="Genre (e.g., Drama | Fantasy | Action)"
                   value={formData.genre}
                   onChange={(e) => setFormData({...formData, genre: e.target.value})}
                   className="px-4 py-3 bg-black/60 backdrop-blur-sm border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus-ring-gold text-white placeholder-gray-500"
@@ -682,7 +693,6 @@ export default function MovieQuotesTracker() {
                     )}
                   </label>
                 </div>
-
                 <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover-border-gold transition-all bg-black/40 backdrop-blur-sm">
                   <input
                     type="file"
@@ -780,6 +790,11 @@ export default function MovieQuotesTracker() {
                           {quote.series && (
                             <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">Series: {quote.series}</span>
                           )}
+                          {quote.genre && quote.genre.split('|').map((g, i) => (
+                            <span key={i} className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">
+                              {g.trim()}
+                            </span>
+                          ))}
                           <span className="flex items-center gap-1">
                             <User className="w-4 h-4" />
                             {quote.author}
@@ -787,9 +802,6 @@ export default function MovieQuotesTracker() {
                           <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
                             {quote.year}
-                          </span>
-                          <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">
-                            {quote.genre}
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
@@ -875,234 +887,6 @@ export default function MovieQuotesTracker() {
           </div>
         </div>
       )}
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap');
-
-        .fancy-title {
-          font-family: 'Cinzel', serif;
-          text-shadow: 0 0 20px rgba(218, 165, 32, 0.5), 0 0 40px rgba(218, 165, 32, 0.3);
-          letter-spacing: 0.1em;
-        }
-
-        .gradient-gold-text-static {
-          background: linear-gradient(135deg, #FFD700 0%, #FDB931 25%, #FFD700 50%, #FFED4E 75%, #FFD700 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
-        }
-
-        .gradient-gold-text-hover {
-          color: #FFD700;
-          transition: all 0.3s ease;
-        }
-
-        .gradient-gold-text-hover:hover {
-          background: linear-gradient(135deg, #FFD700 0%, #FDB931 25%, #FFD700 50%, #FFED4E 75%, #FFD700 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: shine 3s linear infinite;
-          filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
-        }
-
-        .bg-gradient-gold-btn {
-          background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #FFD700 100%);
-          background-size: 200% auto;
-          animation: shine 3s linear infinite;
-        }
-
-        .border-gold {
-          border-color: #FFD700;
-        }
-
-        .focus-ring-gold:focus {
-          --tw-ring-color: #FFD700;
-        }
-
-        .hover-border-gold:hover {
-          border-color: #FFD700;
-        }
-
-        .hover-shadow-gold:hover {
-          box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-        }
-
-        .hover-shadow-gold-lg:hover {
-          box-shadow: 0 0 25px rgba(255, 215, 0, 0.5), 0 0 50px rgba(255, 215, 0, 0.3);
-        }
-
-        @keyframes shine {
-          to {
-            background-position: 200% center;
-          }
-        }
-
-        .fade-out {
-          animation: fadeOut 0.5s ease-out forwards;
-        }
-
-        @keyframes fadeOut {
-          to {
-            opacity: 0;
-          }
-        }
-
-        .animated-gradient {
-          background: linear-gradient(-45deg, #000000, #1a1a1a, #2d2d2d, #404040, #1a1a1a, #000000);
-          background-size: 400% 400%;
-          animation: gradient-shift 25s ease infinite;
-        }
-
-        @keyframes gradient-shift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-
-        .quote-card {
-          position: relative;
-        }
-
-        .spotlight-card {
-          position: relative;
-        }
-
-        .spotlight-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: 0.75rem;
-          padding: 2px;
-          background: linear-gradient(45deg, #FFD700, #FDB931, #FFED4E, #FFD700);
-          background-size: 200% 200%;
-          animation: glow-rotate 3s linear infinite;
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-        }
-
-        .quote-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: 0.75rem;
-          padding: 2px;
-          background: linear-gradient(45deg, transparent, transparent);
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-          opacity: 0;
-          transition: opacity 0.5s;
-        }
-
-        .quote-card:hover::before {
-          background: linear-gradient(45deg, #FFD700, #FDB931, #FFED4E, #FFD700);
-          background-size: 200% 200%;
-          animation: glow-rotate 3s linear infinite;
-          opacity: 1;
-        }
-
-        .quote-card:hover {
-          border-color: #FFD700;
-          box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-          transform: translateY(-4px);
-        }
-
-        .quote-text {
-          transition: all 0.5s ease;
-        }
-
-        .quote-card:hover .quote-text {
-          transform: scale(1.02) translateZ(20px);
-          text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        @keyframes glow-rotate {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fade-in-slow {
-          from { opacity: 0; transform: translateY(40px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slide-in {
-          from { opacity: 0; transform: translateX(-30px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes slide-down {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slide-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
-
-        .animate-fade-in-slow {
-          animation: fade-in-slow 1.2s ease-out forwards;
-        }
-
-        .animate-slide-in {
-          animation: slide-in 0.8s ease-out forwards;
-          animation-delay: 0.3s;
-          opacity: 0;
-        }
-
-        .animate-slide-down {
-          animation: slide-down 0.4s ease-out;
-        }
-
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
-        }
-
-        .highlight-flash {
-          animation: highlight-pulse 2s ease-in-out;
-        }
-
-        @keyframes highlight-pulse {
-          0%, 100% {
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-            border-color: #FFD700;
-          }
-          50% {
-            box-shadow: 0 0 60px rgba(255, 215, 0, 0.8);
-            border-color: #FFED4E;
-          }
-        }
-      `}</style>
     </div>
   );
 }

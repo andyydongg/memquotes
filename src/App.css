@@ -297,8 +297,19 @@ button {
 .mb-6 { margin-bottom: 1.5rem; }
 .mt-4 { margin-top: 1rem; }
 .mt-2 { margin-top: 0.5rem; }
-.text-7xl { font-size: 4.5rem; line-height: 1; }
-.md\:text-8xl { font-size: 6rem; }
+.text-7xl { 
+  font-size: 3rem; 
+  line-height: 1; 
+}
+.md\:text-8xl { 
+  font-size: 6rem; 
+}
+
+@media (min-width: 640px) {
+  .text-7xl {
+    font-size: 4.5rem;
+  }
+}
 .font-bold { font-weight: 700; }
 .tracking-wider { letter-spacing: 0.05em; }
 .text-lg { font-size: 1.125rem; line-height: 1.75rem; }

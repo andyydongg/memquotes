@@ -14,6 +14,5 @@ Your personal collection of memorable movie, book, and TV show moments.
 ## Built With
 
 - React
-- Custom CSS
-
+- Tailwind CSS
 - Lucide React Icons
