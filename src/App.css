@@ -298,14 +298,20 @@ button {
 .mt-4 { margin-top: 1rem; }
 .mt-2 { margin-top: 0.5rem; }
 .text-7xl { 
-  font-size: 3rem; 
-  line-height: 1; 
+  font-size: 2.5rem; 
+  line-height: 1.1; 
 }
 .md\:text-8xl { 
   font-size: 6rem; 
 }
 
 @media (min-width: 640px) {
+  .text-7xl {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 768px) {
   .text-7xl {
     font-size: 4.5rem;
   }
