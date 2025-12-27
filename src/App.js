@@ -40,7 +40,6 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 3,
-      movieId: "movie-2",
       movieName: "斗破苍穹缘起",
       title: "斗破苍穹缘起",
       type: "TV Show",
@@ -57,7 +56,6 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 4,
-      movieId: "movie-3",
       movieName: "斗破苍穹特别篇2沙之澜歌",
       title: "斗破苍穹特别篇2沙之澜歌",
       type: "TV Show",
@@ -74,7 +72,6 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 5,
-      movieId: "movie-4",
       movieName: "斗破苍穹第四季",
       title: "斗破苍穹第四季",
       type: "TV Show",
@@ -91,7 +88,6 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 6,
-      movieId: "movie-5",
       movieName: "The Intouchables",
       title: "The Intouchables",
       type: "Movie",
@@ -109,7 +105,7 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 7,
-      movieId: "movie-6",
+      movieId: "movie-2",
       movieName: "A Working Man",
       title: "A Working Man",
       type: "Movie",
@@ -126,7 +122,7 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 8,
-      movieId: "movie-6",
+      movieId: "movie-2",
       movieName: "A Working Man",
       title: "A Working Man",
       type: "Movie",
@@ -143,7 +139,7 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 9,
-      movieId: "movie-7",
+      movieId: "movie-3",
       movieName: "Enter the Fat Dragon",
       title: "Enter the Fat Dragon",
       type: "Movie",
@@ -160,7 +156,7 @@ export default function MovieQuotesTracker() {
     },
     {
       id: 10,
-      movieId: "movie-7",
+      movieId: "movie-3",
       movieName: "Enter the Fat Dragon",
       title: "Enter the Fat Dragon",
       type: "Movie",
