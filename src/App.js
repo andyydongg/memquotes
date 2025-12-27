@@ -6,6 +6,7 @@ export default function MovieQuotesTracker() {
   const [quotes, setQuotes] = useState([
     {
       id: 1,
+      movieId: "movie-1",
       movieName: "Spider-Man: Homecoming",
       title: "Spider-Man: Homecoming",
       type: "Movie",
@@ -15,13 +16,31 @@ export default function MovieQuotesTracker() {
       genre: "Science Fiction | Action",
       length: "127 min",
       timestamp: "1:21:48",
-      quote: "If you're nothing without this suit, then you shouldn't have it.",
+      quote: "If you're nothing without this suit, then you shouldn't have it. Okay?",
       backgroundImage: "/images/spiderman_homecoming.jpg",
       audioFile: "",
       collapsed: false
     },
     {
       id: 2,
+      movieId: "movie-1",
+      movieName: "Spider-Man: Homecoming",
+      title: "Spider-Man: Homecoming",
+      type: "Movie",
+      series: "Spider-man",
+      author: "Tony Stark",
+      year: "2017",
+      genre: "Science Fiction | Action",
+      length: "127 min",
+      timestamp: "1:21:32",
+      quote: "[I just wanted to be like you.] And I wanted you to be better.",
+      backgroundImage: "/images/spiderman_homecoming.jpg",
+      audioFile: "",
+      collapsed: false
+    },
+    {
+      id: 3,
+      movieId: "movie-2",
       movieName: "斗破苍穹缘起",
       title: "斗破苍穹缘起",
       type: "TV Show",
@@ -37,7 +56,8 @@ export default function MovieQuotesTracker() {
       collapsed: false
     },
     {
-      id: 3,
+      id: 4,
+      movieId: "movie-3",
       movieName: "斗破苍穹特别篇2沙之澜歌",
       title: "斗破苍穹特别篇2沙之澜歌",
       type: "TV Show",
@@ -53,7 +73,8 @@ export default function MovieQuotesTracker() {
       collapsed: false
     },
     {
-      id: 4,
+      id: 5,
+      movieId: "movie-4",
       movieName: "斗破苍穹第四季",
       title: "斗破苍穹第四季",
       type: "TV Show",
@@ -69,7 +90,8 @@ export default function MovieQuotesTracker() {
       collapsed: false
     },
     {
-      id: 5,
+      id: 6,
+      movieId: "movie-5",
       movieName: "The Intouchables",
       title: "The Intouchables",
       type: "Movie",
@@ -86,18 +108,70 @@ export default function MovieQuotesTracker() {
       collapsed: false
     },
     {
-      id: 6,
+      id: 7,
+      movieId: "movie-6",
       movieName: "A Working Man",
       title: "A Working Man",
       type: "Movie",
       series: "",
-      author: "Merry | Gunny",
+      author: "Merry Cade",
       year: "2025",
       genre: "Action | Suspense",
       length: "116 min",
       timestamp: "1:49:40",
-      quote: "[So, what did I miss?] Well, I made friends with a crow and an owl. And there's a goat I taught to say my name. Welcome back, Brother. You're home.",
+      quote: "[So, what did I miss?] Well, I made friends with a crow and an owl. And there's a goat I taught to say my name.",
       backgroundImage: "/images/working-man.jpg",
+      audioFile: "",
+      collapsed: false
+    },
+    {
+      id: 8,
+      movieId: "movie-6",
+      movieName: "A Working Man",
+      title: "A Working Man",
+      type: "Movie",
+      series: "",
+      author: "Gunny Lefferty",
+      year: "2025",
+      genre: "Action | Suspense",
+      length: "116 min",
+      timestamp: "1:50:10",
+      quote: "Welcome back, Brother. You're home.",
+      backgroundImage: "/images/working-man.jpg",
+      audioFile: "",
+      collapsed: false
+    },
+    {
+      id: 9,
+      movieId: "movie-7",
+      movieName: "Enter the Fat Dragon",
+      title: "Enter the Fat Dragon",
+      type: "Movie",
+      series: "",
+      author: "Fallon Zhu",
+      year: "2020",
+      genre: "Action | Comedy | Humorous",
+      length: "96 min",
+      timestamp: "0:24:05",
+      quote: "在最緊要咩呀？最緊要冇事吖嘛",
+      backgroundImage: "/images/enterTheFatDragon.jpg",
+      audioFile: "",
+      collapsed: false
+    },
+    {
+      id: 10,
+      movieId: "movie-7",
+      movieName: "Enter the Fat Dragon",
+      title: "Enter the Fat Dragon",
+      type: "Movie",
+      series: "",
+      author: "Fallon Zhu",
+      year: "2020",
+      genre: "Action | Comedy | Humorous",
+      length: "96 min",
+      timestamp: "1:04:10",
+      quote: "[其實我哋兩個都咁愛大家。點解成日都嗌交嘅？]冇嗌交啊，我哋大家互相溝通咋嘛",
+      backgroundImage: "/images/enterTheFatDragon.jpg",
       audioFile: "",
       collapsed: false
     }
@@ -230,11 +304,18 @@ export default function MovieQuotesTracker() {
     };
     
     if (editingId) {
-      const updated = quotes.map(q => q.id === editingId ? { ...quoteData, id: editingId } : q);
+      const updated = quotes.map(q => q.id === editingId ? { ...quoteData, id: editingId, movieId: q.movieId } : q);
       saveQuotes(updated);
       setEditingId(null);
     } else {
-      const newQuote = { ...quoteData, id: Date.now() };
+      // Find if movie already exists
+      const existingMovie = quotes.find(q => 
+        (q.movieName || q.title) === formData.movieName && 
+        q.type === formData.type
+      );
+      
+      const movieId = existingMovie ? existingMovie.movieId : `movie-${Date.now()}`;
+      const newQuote = { ...quoteData, id: Date.now(), movieId };
       const updatedQuotes = [...quotes, newQuote];
       saveQuotes(updatedQuotes);
       if (!spotlightQuote) {
@@ -777,101 +858,120 @@ export default function MovieQuotesTracker() {
               </p>
             </div>
           ) : (
-            filteredQuotes.map((quote, index) => (
-              <div
-                key={quote.id}
-                id={`quote-${quote.id}`}
-                className="quote-card relative overflow-hidden bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl transition-all duration-500 animate-fade-in group"
-                style={{ animationDelay: `${index * 0.15}s` }}
-              >
-                {quote.backgroundImage && !quote.collapsed && (
-                  <div className="absolute inset-0">
-                    <img 
-                      src={quote.backgroundImage} 
-                      alt="" 
-                      className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60" />
-                  </div>
-                )}
-
-                <div className="relative z-10 p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold gradient-gold-text-hover mb-2 group-hover:scale-105 transition-all duration-300">
-                        {quote.movieName || quote.title}
+            // Group quotes by movieId
+            Object.entries(
+              filteredQuotes.reduce((acc, quote) => {
+                const key = quote.movieId || `single-${quote.id}`;
+                if (!acc[key]) acc[key] = [];
+                acc[key].push(quote);
+                return acc;
+              }, {})
+            ).map(([movieId, movieQuotes], groupIndex) => {
+              const firstQuote = movieQuotes[0];
+              return (
+                <div key={movieId} className="space-y-4" style={{ animationDelay: `${groupIndex * 0.15}s` }}>
+                  {/* Movie header card */}
+                  <div className="quote-card relative overflow-hidden bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl transition-all duration-500 animate-fade-in group">
+                    {firstQuote.backgroundImage && (
+                      <div className="absolute inset-0">
+                        <img 
+                          src={firstQuote.backgroundImage} 
+                          alt="" 
+                          className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60" />
+                      </div>
+                    )}
+                    <div className="relative z-10 p-6">
+                      <h3 className="text-2xl font-bold gradient-gold-text-hover mb-2">
+                        {firstQuote.movieName || firstQuote.title}
                       </h3>
-                      {!quote.collapsed && (
-                        <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                          <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">{quote.type}</span>
-                          {quote.series && (
-                            <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">Series: {quote.series}</span>
-                          )}
-                          {quote.genre && quote.genre.split('|').map((g, i) => (
-                            <span key={i} className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">
-                              {g.trim()}
-                            </span>
-                          ))}
-                          <span className="flex items-center gap-1">
-                            <User className="w-4 h-4" />
-                            {quote.author}
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                        <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">{firstQuote.type}</span>
+                        {firstQuote.series && (
+                          <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">Series: {firstQuote.series}</span>
+                        )}
+                        {firstQuote.genre && firstQuote.genre.split('|').map((g, i) => (
+                          <span key={i} className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">
+                            {g.trim()}
                           </span>
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            {quote.year}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {quote.timestamp}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      {quote.audioFile && !quote.collapsed && (
-                        <button
-                          onClick={() => playAudio(quote.audioFile)}
-                          className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
-                          title="Play Audio"
-                        >
-                          <Volume2 className="w-4 h-4 text-yellow-500" />
-                        </button>
-                      )}
-                      <button
-                        onClick={() => toggleCollapse(quote.id)}
-                        className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
-                        title={quote.collapsed ? "Expand" : "Collapse"}
-                      >
-                        {quote.collapsed ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronUp className="w-4 h-4 text-white" />}
-                      </button>
-                      <button
-                        onClick={() => handleEdit(quote)}
-                        className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
-                      >
-                        <Edit2 className="w-4 h-4 text-white" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(quote.id)}
-                        className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-red-600 hover:scale-110 rounded-lg transition-all duration-300"
-                      >
-                        <Trash2 className="w-4 h-4 text-white" />
-                      </button>
-                    </div>
-                  </div>
-                  {!quote.collapsed && (
-                    <div className="space-y-3">
-                      <blockquote className="quote-text text-lg text-white italic border-l-4 border-gold pl-4">
-                        "{quote.quote}"
-                      </blockquote>
-                      <div className="flex items-center gap-2 text-sm text-gray-500 italic pl-4">
-                        <Clock className="w-3 h-3" />
-                        <span>Scene at {quote.timestamp}</span>
+                        ))}
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {firstQuote.year}
+                        </span>
+                        <span className="px-2 py-1 bg-yellow-500/20 text-yellow-500 rounded text-xs font-semibold">
+                          {movieQuotes.length} {movieQuotes.length === 1 ? 'Quote' : 'Quotes'}
+                        </span>
                       </div>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Individual quotes */}
+                  {movieQuotes.map((quote, index) => (
+                    <div
+                      key={quote.id}
+                      id={`quote-${quote.id}`}
+                      className="quote-card relative overflow-hidden bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl transition-all duration-500 animate-fade-in group ml-6"
+                    >
+                      <div className="relative z-10 p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex-1">
+                            {!quote.collapsed && (
+                              <div className="flex flex-wrap gap-4 text-sm text-gray-400 mb-3">
+                                <span className="flex items-center gap-1">
+                                  <User className="w-4 h-4" />
+                                  {quote.author}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-4 h-4" />
+                                  {quote.timestamp}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            {quote.audioFile && !quote.collapsed && (
+                              <button
+                                onClick={() => playAudio(quote.audioFile)}
+                                className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
+                                title="Play Audio"
+                              >
+                                <Volume2 className="w-4 h-4 text-yellow-500" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => toggleCollapse(quote.id)}
+                              className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
+                              title={quote.collapsed ? "Expand" : "Collapse"}
+                            >
+                              {quote.collapsed ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronUp className="w-4 h-4 text-white" />}
+                            </button>
+                            <button
+                              onClick={() => handleEdit(quote)}
+                              className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
+                            >
+                              <Edit2 className="w-4 h-4 text-white" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(quote.id)}
+                              className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-red-600 hover:scale-110 rounded-lg transition-all duration-300"
+                            >
+                              <Trash2 className="w-4 h-4 text-white" />
+                            </button>
+                          </div>
+                        </div>
+                        {!quote.collapsed && (
+                          <blockquote className="quote-text text-lg text-white italic border-l-4 border-gold pl-4">
+                            "{quote.quote}"
+                          </blockquote>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 
