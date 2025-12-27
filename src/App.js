@@ -476,6 +476,33 @@ export default function MovieQuotesTracker() {
     }
   };
 
+  // Group quotes for display - only group those with movieId
+  const groupedQuotes = filteredQuotes.reduce((acc, quote) => {
+    if (quote.movieId) {
+      // Group quotes with movieId
+      if (!acc.groups[quote.movieId]) {
+        acc.groups[quote.movieId] = {
+          movieId: quote.movieId,
+          movieName: quote.movieName || quote.title,
+          type: quote.type,
+          series: quote.series,
+          year: quote.year,
+          genre: quote.genre,
+          backgroundImage: quote.backgroundImage,
+          quotes: []
+        };
+      }
+      acc.groups[quote.movieId].quotes.push(quote);
+    } else {
+      // Single quotes without movieId stay separate
+      acc.singles.push(quote);
+    }
+    return acc;
+  }, { groups: {}, singles: [] });
+
+  // Convert groups to array for rendering
+  const groupedArray = Object.values(groupedQuotes.groups);
+
   return (
     <div className="min-h-screen text-white p-4 md:p-8 animated-gradient">
       <div className="max-w-6xl mx-auto">
@@ -854,24 +881,16 @@ export default function MovieQuotesTracker() {
               </p>
             </div>
           ) : (
-            // Group quotes by movieId
-            Object.entries(
-              filteredQuotes.reduce((acc, quote) => {
-                const key = quote.movieId || `single-${quote.id}`;
-                if (!acc[key]) acc[key] = [];
-                acc[key].push(quote);
-                return acc;
-              }, {})
-            ).map(([movieId, movieQuotes], groupIndex) => {
-              const firstQuote = movieQuotes[0];
-              return (
-                <div key={movieId} className="space-y-4" style={{ animationDelay: `${groupIndex * 0.15}s` }}>
+            <>
+              {/* Render grouped quotes (with movieId) */}
+              {groupedArray.map((group, groupIndex) => (
+                <div key={group.movieId} className="space-y-4" style={{ animationDelay: `${groupIndex * 0.15}s` }}>
                   {/* Movie header card */}
                   <div className="quote-card relative overflow-hidden bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl transition-all duration-500 animate-fade-in group">
-                    {firstQuote.backgroundImage && (
+                    {group.backgroundImage && (
                       <div className="absolute inset-0">
                         <img 
-                          src={firstQuote.backgroundImage} 
+                          src={group.backgroundImage} 
                           alt="" 
                           className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500"
                         />
@@ -880,31 +899,31 @@ export default function MovieQuotesTracker() {
                     )}
                     <div className="relative z-10 p-6">
                       <h3 className="text-2xl font-bold gradient-gold-text-hover mb-2">
-                        {firstQuote.movieName || firstQuote.title}
+                        {group.movieName}
                       </h3>
                       <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                        <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">{firstQuote.type}</span>
-                        {firstQuote.series && (
-                          <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">Series: {firstQuote.series}</span>
+                        <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">{group.type}</span>
+                        {group.series && (
+                          <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">Series: {group.series}</span>
                         )}
-                        {firstQuote.genre && firstQuote.genre.split('|').map((g, i) => (
+                        {group.genre && group.genre.split('|').map((g, i) => (
                           <span key={i} className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">
                             {g.trim()}
                           </span>
                         ))}
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          {firstQuote.year}
+                          {group.year}
                         </span>
                         <span className="px-2 py-1 bg-yellow-500/20 text-yellow-500 rounded text-xs font-semibold">
-                          {movieQuotes.length} {movieQuotes.length === 1 ? 'Quote' : 'Quotes'}
+                          {group.quotes.length} {group.quotes.length === 1 ? 'Quote' : 'Quotes'}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Individual quotes */}
-                  {movieQuotes.map((quote, index) => (
+                  {/* Individual quotes for grouped movies */}
+                  {group.quotes.map((quote, index) => (
                     <div
                       key={quote.id}
                       id={`quote-${quote.id}`}
@@ -966,8 +985,105 @@ export default function MovieQuotesTracker() {
                     </div>
                   ))}
                 </div>
-              );
-            })
+              ))}
+
+              {/* Render single quotes (without movieId) */}
+              {groupedQuotes.singles.map((quote, index) => (
+                <div
+                  key={quote.id}
+                  id={`quote-${quote.id}`}
+                  className="quote-card relative overflow-hidden bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-xl transition-all duration-500 animate-fade-in group"
+                  style={{ animationDelay: `${(groupedArray.length + index) * 0.15}s` }}
+                >
+                  {quote.backgroundImage && !quote.collapsed && (
+                    <div className="absolute inset-0">
+                      <img 
+                        src={quote.backgroundImage} 
+                        alt="" 
+                        className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/60" />
+                    </div>
+                  )}
+
+                  <div className="relative z-10 p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold gradient-gold-text-hover mb-2 group-hover:scale-105 transition-all duration-300">
+                          {quote.movieName || quote.title}
+                        </h3>
+                        {!quote.collapsed && (
+                          <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                            <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">{quote.type}</span>
+                            {quote.series && (
+                              <span className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">Series: {quote.series}</span>
+                            )}
+                            {quote.genre && quote.genre.split('|').map((g, i) => (
+                              <span key={i} className="px-2 py-1 bg-gray-800/80 backdrop-blur-sm rounded text-xs">
+                                {g.trim()}
+                              </span>
+                            ))}
+                            <span className="flex items-center gap-1">
+                              <User className="w-4 h-4" />
+                              {quote.author}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              {quote.year}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {quote.timestamp}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        {quote.audioFile && !quote.collapsed && (
+                          <button
+                            onClick={() => playAudio(quote.audioFile)}
+                            className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
+                            title="Play Audio"
+                          >
+                            <Volume2 className="w-4 h-4 text-yellow-500" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => toggleCollapse(quote.id)}
+                          className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
+                          title={quote.collapsed ? "Expand" : "Collapse"}
+                        >
+                          {quote.collapsed ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronUp className="w-4 h-4 text-white" />}
+                        </button>
+                        <button
+                          onClick={() => handleEdit(quote)}
+                          className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700/80 hover:scale-110 rounded-lg transition-all duration-300"
+                        >
+                          <Edit2 className="w-4 h-4 text-white" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(quote.id)}
+                          className="p-2 bg-gray-800/80 backdrop-blur-sm hover:bg-red-600 hover:scale-110 rounded-lg transition-all duration-300"
+                        >
+                          <Trash2 className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    </div>
+                    {!quote.collapsed && (
+                      <div className="space-y-3">
+                        <blockquote className="quote-text text-lg text-white italic border-l-4 border-gold pl-4">
+                          "{quote.quote}"
+                        </blockquote>
+                        <div className="flex items-center gap-2 text-sm text-gray-500 italic pl-4">
+                          <Clock className="w-3 h-3" />
+                          <span>Scene at {quote.timestamp}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </>
           )}
         </div>
 
