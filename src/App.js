@@ -170,6 +170,22 @@ export default function MovieQuotesTracker() {
       backgroundImage: "/images/enterTheFatDragon.jpg",
       audioFile: "",
       collapsed: false
+    },
+    {
+      id: 11,
+      movieName: "The Beekeeper",
+      title: "The Beekeeper",
+      type: "Movie",
+      series: "",
+      author: "Adam Clay",
+      year: "2024",
+      genre: "Action | Suspense | Dark",
+      length: "96 min",
+      timestamp: "1:38:38",
+      quote: "You decide who you work for. For the law or for justice.",
+      backgroundImage: "/images/beekeeper.jpg",
+      audioFile: "",
+      collapsed: false
     }
   ]);
   const [spotlightQuote, setSpotlightQuote] = useState(null);
